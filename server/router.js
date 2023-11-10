@@ -9,25 +9,27 @@ const authMiddleware = require("./middleware/auth");
 
 router.post("/register", userController.register);
 router.post("/login", userController.login);
-router.get("/me", userController.profile);
-router.post("/logout", userController.logout);
+router.get("/me", authMiddleware, userController.profile);
+router.post("/logout", authMiddleware, userController.logout);
 
-router.post("/diet", dietController.postDiet);
-router.put("/diet/:dietId", dietController.updateDiet);
+router.post("/diet", authMiddleware, dietController.postDiet);
+router.put("/diet/:dietId", authMiddleware, dietController.updateDiet);
 
-router.post("/reading", readingController.postReading);
+router.post("/reading", authMiddleware, readingController.postReading);
 router.put(
   "/reading/:readingId",
+  authMiddleware,
 
   readingController.updateReading
 );
 
-router.post("/water", waterController.postWater);
-router.put("/water/:waterId", waterController.updateWater);
+router.post("/water", authMiddleware, waterController.postWater);
+router.put("/water/:waterId", authMiddleware, waterController.updateWater);
 
-router.post("/workout", workoutController.postWorkout);
+router.post("/workout", authMiddleware, workoutController.postWorkout);
 router.put(
   "/workout/:workoutId",
+  authMiddleware,
 
   workoutController.updateWorkout
 );

@@ -52,12 +52,12 @@ exports.updateDiet = async (req, res) => {
     }
 
     //not sure if necessary
-    if (diet.user != req.user.id) {
-      return res.status(403).send({
-        res: { data: "Can't update for another user!", statusCode: 400 },
-        error: true,
-      });
-    }
+    // if (diet.user != req.user.id) {
+    //   return res.status(403).send({
+    //     res: { data: "Can't update for another user!", statusCode: 400 },
+    //     error: true,
+    //   });
+    // }
 
     diet = await Diet.findByIdAndUpdate(req.params.dietId, data, { new: true });
     console.log(req.params.dietId);
@@ -65,6 +65,7 @@ exports.updateDiet = async (req, res) => {
       .status(201)
       .send({ res: { data: diet, statusCode: 201 }, error: false });
   } catch (e) {
+    console.log(e);
     return res.status(500).send({
       res: { data: "Internal Server Error!", statusCode: 500 },
       error: true,

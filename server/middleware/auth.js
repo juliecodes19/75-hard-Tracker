@@ -6,11 +6,12 @@ const { ACCESS_TOKEN_SECRET } = process.env;
 
 const authMiddleware = async (req, res, next) => {
   const token = req.header("Authorization");
+  // console.log(token, ACCESS_TOKEN_SECRET, token.split(" ")[1]);
   if (!token)
     return res.status(400).json({ status: false, msg: "Token not found" });
   let user;
   try {
-    user = jwt.verify(token, ACCESS_TOKEN_SECRET);
+    user = jwt.verify(token.split(" ")[1], ACCESS_TOKEN_SECRET);
   } catch (err) {
     return res.status(401).json({ status: false, msg: "Invalid token" });
   }

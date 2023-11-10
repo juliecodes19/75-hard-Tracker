@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const router = require("./router.js");
 const cors = require("cors");
+import { ClerkExpressWithAuth } from "@clerk/clerk-sdk-node";
 // const SERVER_PORT = process.env.SERVER_PORT || 3001;
 const dotenv = require("dotenv");
 

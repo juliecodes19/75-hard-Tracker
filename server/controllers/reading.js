@@ -65,6 +65,7 @@ exports.updateReading = async (req, res) => {
       .status(201)
       .send({ res: { data: reading, statusCode: 201 }, error: false });
   } catch (e) {
+    console.log(e);
     return res.status(500).send({
       res: { data: "Internal Server Error!", statusCode: 500 },
       error: true,
