@@ -35,14 +35,14 @@ exports.updateWorkout = async (req, res) => {
     }
 
     //validate the format of the dietId parameter in the request Url
-    if (!validateObjectId(req.params.dietId)) {
+    if (!validateObjectId(req.params.workoutId)) {
       return res.status(400).send({
         res: { data: "Workout Id not found!", statusCode: 400 },
         error: true,
       });
     }
 
-    let workout = await Workout.findById(req.params.readingId);
+    let workout = await Workout.findById(req.params.workoutId);
 
     if (!workout) {
       return res

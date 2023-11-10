@@ -37,6 +37,10 @@ const RecapSchema = new Schema({
       ref: "Reading",
     },
   ],
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Recap = mongoose.model("recap", RecapSchema);

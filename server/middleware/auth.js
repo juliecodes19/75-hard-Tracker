@@ -1,19 +1,34 @@
 // REMOVE-START
+const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
+const { ACCESS_TOKEN_SECRET } = process.env;
 // REMOVE-END
 
 const authMiddleware = async (req, res, next) => {
-  // REMOVE-START
+  const token = req.header("Authorization");
+  if (!token)
+    return res.status(400).json({ status: false, msg: "Token not found" });
+  let user;
   try {
-    const { uid } = req.session;
-    const user = await User.findOne({ _id: uid });
-    if (!user) throw new Error();
+    user = jwt.verify(token, ACCESS_TOKEN_SECRET);
+  } catch (err) {
+    return res.status(401).json({ status: false, msg: "Invalid token" });
+  }
+
+  try {
+    user = await User.findById(user.id);
+    if (!user) {
+      return res.status(401).json({ status: false, msg: "User not found" });
+    }
+
     req.user = user;
     next();
-  } catch (error) {
-    return res.sendStatus(401);
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ status: false, msg: "Internal Server Error" });
   }
-  // REMOVE-END
 };
 
 module.exports = authMiddleware;

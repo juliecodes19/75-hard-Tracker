@@ -42,7 +42,7 @@ exports.updateWater = async (req, res) => {
       });
     }
 
-    let water = await Water.findById(req.params.dietId);
+    let water = await Water.findById(req.params.waterId);
 
     if (!water) {
       return res

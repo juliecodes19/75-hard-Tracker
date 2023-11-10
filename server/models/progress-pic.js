@@ -14,6 +14,10 @@ const ImageSchema = new Schema({
     data: Buffer,
     contentType: String,
   },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Image = mongoose.model("image", ImageSchema);

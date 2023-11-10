@@ -9,29 +9,29 @@ const authMiddleware = require("./middleware/auth");
 
 router.post("/register", userController.register);
 router.post("/login", userController.login);
-router.get("/me", authMiddleware, userController.profile);
-router.post("/logout", authMiddleware, userController.logout);
+router.get("/me", userController.profile);
+router.post("/logout", userController.logout);
 
-router.post("/", authMiddleware, dietController.postDiet);
-router.put("/:dietId", authMiddleware, dietController.updateDiet);
+router.post("/diet", dietController.postDiet);
+router.put("/diet/:dietId", dietController.updateDiet);
 
-router.post("/reading", authMiddleware, readingController.postReading);
+router.post("/reading", readingController.postReading);
 router.put(
-  "/update/:readingId",
-  authMiddleware,
+  "/reading/:readingId",
+
   readingController.updateReading
 );
 
-router.post("/water", authMiddleware, waterController.postWater);
-router.put("/update/:waterId", authMiddleware, waterController.updateWater);
+router.post("/water", waterController.postWater);
+router.put("/water/:waterId", waterController.updateWater);
 
-router.post("/workout", authMiddleware, workoutController.postWorkout);
+router.post("/workout", workoutController.postWorkout);
 router.put(
   "/workout/:workoutId",
-  authMiddleware,
+
   workoutController.updateWorkout
 );
 
-router.post("/image", authMiddleware, imageController.postImage);
+router.post("/image", imageController.postImage);
 
 module.exports = router;

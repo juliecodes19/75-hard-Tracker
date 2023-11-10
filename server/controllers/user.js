@@ -1,7 +1,7 @@
 const User = require("../models/user.js");
 const bcrypt = require("bcrypt");
-// const { createAccessToken } = require("../utils/token");
-// const { validateEmail } = require("../utils/validation");
+const { createAccessToken } = require("../utils/token");
+const { validateEmail } = require("../utils/validation");
 
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -14,12 +14,12 @@ exports.register = async (req, res) => {
     });
   }
   try {
-    // if (!name || !email || !password) {
-    //   return res.status(400).send({
-    //     res: { data: "Invalid Form Fields!", statusCode: 400 },
-    //     error: true,
-    //   });
-    // }
+    if (!name || !email || !password) {
+      return res.status(400).send({
+        res: { data: "Invalid Form Fields!", statusCode: 400 },
+        error: true,
+      });
+    }
 
     //password validation
     if (password.length < 5) {
@@ -31,22 +31,17 @@ exports.register = async (req, res) => {
         error: true,
       });
     }
-    //email validation
-    // if (!validateEmail(email)) {
-    //   return res.status(400).send({
-    //     res: { data: "Invalid Email!", statusCode: 400 },
-    //     error: true,
-    //   });
-    // }
+    // email validation
+    if (!validateEmail(email)) {
+      return res.status(400).send({
+        res: { data: "Invalid Email!", statusCode: 400 },
+        error: true,
+      });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      ...req.body,
-      password: hashedPassword,
-    });
-    const user = await newUser.save();
-    req.session.uid = user._id;
-    res.status(201).send(user);
+    await User.create({ name, email, password: hashedPassword });
+    res.status(200).json({ msg: "Congratulations!! Account created " });
   } catch (e) {
     return res.status(500).send({
       res: { data: "Internal Server Error!", statusCode: 500 },
@@ -73,7 +68,11 @@ exports.login = async (req, res) => {
       });
     }
 
+    console.log("Stored Hashed Password:", user.password);
+    console.log("Entered Password:", password);
+
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log(isMatch);
     if (!isMatch) {
       return res.status(400).send({
         res: { data: "Incorrect Password!", statusCode: 400 },
@@ -81,8 +80,11 @@ exports.login = async (req, res) => {
       });
     }
 
-    req.session.uid = user._id;
-    res.status(200).send(user);
+    const token = createAccessToken({ id: user._id });
+
+    res
+      .status(200)
+      .json({ token, user, status: true, msg: "Login successful.." });
   } catch (e) {
     return res
       .status(401)
@@ -97,7 +99,7 @@ exports.profile = async (req, res) => {
     const user = { _id, firstName, lastName };
     res.status(200).send(user);
   } catch {
-    res.status(404).send({ error, message: "User not found" });
+    res.status(404).send({ error, message: "Resource not found" });
   }
   // REMOVE-END
 };
