@@ -1,84 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import auth from "./utils/auth";
+import Navbar from "./components/Navbar";
 import Dashboard from "./components/dashboard/Dashboard";
+import Home from "./pages/Home";
+
 import "./App.css";
 
-import {
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-  UserButton,
-  SignIn,
-  SignUp,
-  // useUser,
-  RedirectToSignIn,
-} from "@clerk/clerk-react";
-
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import { WorkoutForm } from "./components/Workout";
-
-if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key");
-}
-const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
-
-function PublicPage() {
-  return (
-    <>
-      <h1>Public page</h1>
-      <a href="/protected">Go to protected page</a>
-    </>
-  );
-}
-
-function ProtectedPage() {
-  return (
-    <>
-      <h1>Protected page</h1>
-      <UserButton />
-      <Dashboard></Dashboard>
-      <WorkoutForm></WorkoutForm>
-    </>
-  );
-}
-
-function ClerkProviderWithRoutes() {
-  const navigate = useNavigate();
-
-  return (
-    <ClerkProvider publishableKey={clerkPubKey} navigate={(to) => navigate(to)}>
-      <Routes>
-        <Route path="/" element={<PublicPage />} />
-        <Route
-          path="/sign-in/*"
-          element={<SignIn routing="path" path="/sign-in" />}
-        />
-        <Route
-          path="/sign-up/*"
-          element={<SignUp routing="path" path="/sign-up" />}
-        />
-        <Route
-          path="/protected"
-          element={
-            <>
-              <SignedIn>
-                <ProtectedPage />
-              </SignedIn>
-              <SignedOut>
-                <RedirectToSignIn />
-              </SignedOut>
-            </>
-          }
-        />
-      </Routes>
-    </ClerkProvider>
-  );
-}
-
 function App() {
+  const initialState = auth.isAuthenticated();
+  const [isAuthenticated, setIsAuthenticated] = useState(initialState);
+
   return (
-    <BrowserRouter>
-      <ClerkProviderWithRoutes />
-    </BrowserRouter>
+    <main className="App">
+      <Router>
+        <Navbar isAuthenticated={isAuthenticated} />
+        <Home setIsAuthenticated={setIsAuthenticated} />
+      </Router>
+    </main>
   );
 }
 

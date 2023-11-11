@@ -4,13 +4,14 @@
   "description": "The 75 hard challenge is a mental toughness challenge that consists of a list of repetitive tasks to accomplish every day for 75 days: 1.\tStick to a specific diet 2.\tWorkout twice a day for 45min each time 3.\tRead at least 10 pages of a non fiction book 4.\tDrink at least 4L of water 5.\tTake a progress picture My MVP will help my user track his progress by inputting daily info,  send a reminder if the user didn’t enter any info by a certain time, and also generate daily/weekly reports that he can share with an accountability partner.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.12.21",
+    "aws-amplify": "^5.3.12",
+    "aws-sdk": "^2.1494.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -20,6 +21,5 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.0",
     "multer": "^1.4.5-lts.1"
-  },
-  "type": "module"
+  }
 }

@@ -5,6 +5,8 @@ const readingController = require("./controllers/reading");
 const waterController = require("./controllers/water");
 const workoutController = require("./controllers/workout");
 const imageController = require("./controllers/progress-pic");
+const multer = require("multer");
+
 const authMiddleware = require("./middleware/auth");
 
 router.post("/register", userController.register);
@@ -34,6 +36,13 @@ router.put(
   workoutController.updateWorkout
 );
 
-router.post("/image", imageController.postImage);
+const storage = multer.memoryStorage();
+const upload = multer();
+router.post(
+  "/upload",
+  authMiddleware,
+  upload.single("image"),
+  imageController.postImage
+);
 
 module.exports = router;

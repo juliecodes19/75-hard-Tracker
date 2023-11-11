@@ -1,12 +1,10 @@
-// REMOVE-START
 const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
 const { ACCESS_TOKEN_SECRET } = process.env;
-// REMOVE-END
 
 const authMiddleware = async (req, res, next) => {
   const token = req.header("Authorization");
-  // console.log(token, ACCESS_TOKEN_SECRET, token.split(" ")[1]);
+  console.log(token, ACCESS_TOKEN_SECRET, token.split(" ")[1]);
   if (!token)
     return res.status(400).json({ status: false, msg: "Token not found" });
   let user;

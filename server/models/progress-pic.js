@@ -10,9 +10,8 @@ const ImageSchema = new Schema({
   name: {
     type: String,
   },
-  img: {
-    data: Buffer,
-    contentType: String,
+  imgUrl: {
+    type: String, // Store the URL to the image file
   },
   date: {
     type: Date,
