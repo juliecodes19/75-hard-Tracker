@@ -22,16 +22,22 @@ const authMiddleware = async (req, res, next) => {
   const token = parts[1];
 
   try {
-    const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
-    const user = await User.findById(decoded.id).select("-password"); // Exclude password from the user object
+    jwt.verify(token, ACCESS_TOKEN_SECRET, async (error, decoded) => {
+      if (error) {
+        console.error("token failed", error.message);
+        res.send({ error: error.message });
+      } else {
+        const user = await User.findById(decoded.id).select("-password"); // Exclude password from the user object
 
-    if (!user) {
-      return res.status(401).json({ status: false, msg: "User not found" });
-    }
+        if (!user) {
+          return res.status(401).json({ status: false, msg: "User not found" });
+        }
 
-    // Attach the user object to the request
-    req.user = user;
-    next(); // Proceed to the next middleware
+        // Attach the user object to the request
+        req.user = user;
+        next(); // Proceed to the next middleware
+      }
+    });
   } catch (err) {
     console.error(err);
     // Differentiate between token errors and server errors

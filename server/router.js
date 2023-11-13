@@ -5,6 +5,7 @@ const readingController = require("./controllers/reading");
 const waterController = require("./controllers/water");
 const workoutController = require("./controllers/workout");
 const imageController = require("./controllers/progress-pic");
+const recapController = require("./controllers/recap");
 
 const multer = require("multer");
 
@@ -45,5 +46,7 @@ router.post(
   upload.single("image"),
   imageController.postImage
 );
+
+router.get("/recap/", authMiddleware, recapController.getRecap);
 
 module.exports = router;
