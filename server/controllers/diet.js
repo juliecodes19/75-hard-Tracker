@@ -5,19 +5,20 @@ const { validateObjectId } = require("../utils/validation");
 
 exports.postDiet = async (req, res) => {
   try {
-    const data = req.body;
-    if (!data) {
-      return res.status(400).send({
-        res: { data: "Invalid Form Fields!", statusCode: 400 },
-        error: true,
-      });
-    }
-    const diet = await Diet.create(data);
-    return res
-      .status(201)
-      .send({ res: { data: diet, statusCode: 201 }, error: false });
+    const userId = req.user._id;
+    const dietData = {
+      ...req.body,
+      user: userId,
+    };
+
+    const diet = await Diet.create(dietData);
+    return res.status(201).json({
+      res: { data: diet, statusCode: 201 },
+      error: false,
+    });
   } catch (e) {
-    return res.status(500).send({
+    console.error(e); // Log the full error
+    return res.status(500).json({
       res: { data: "Internal Server Error!", statusCode: 500 },
       error: true,
     });

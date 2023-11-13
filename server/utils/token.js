@@ -5,8 +5,9 @@ dotenv.config();
 const { ACCESS_TOKEN_SECRET } = process.env;
 
 const createAccessToken = (payload) => {
-  console.log("access token", ACCESS_TOKEN_SECRET);
-  return jwt.sign(payload, ACCESS_TOKEN_SECRET);
+  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "1h",
+  });
 };
 
 module.exports = {

@@ -5,19 +5,23 @@ const { validateObjectId } = require("../utils/validation");
 
 exports.postWorkout = async (req, res) => {
   try {
-    const data = req.body;
-    if (!data) {
-      return res.status(400).send({
-        res: { data: "Invalid Form Fields!", statusCode: 400 },
-        error: true,
-      });
-    }
-    const workout = await Workout.create(data);
-    return res
-      .status(201)
-      .send({ res: { data: workout, statusCode: 201 }, error: false });
+    // Assuming that the user's ID is stored in req.user after authentication
+    const userId = req.user._id;
+    const workoutData = {
+      ...req.body,
+      user: userId, // Add the user's ID to the workout data
+    };
+
+    // Validate workoutData here to ensure required fields are present before creating the workout
+
+    const workout = await Workout.create(workoutData);
+    return res.status(201).json({
+      res: { data: workout, statusCode: 201 },
+      error: false,
+    });
   } catch (e) {
-    return res.status(500).send({
+    console.error(e); // Log the full error
+    return res.status(500).json({
       res: { data: "Internal Server Error!", statusCode: 500 },
       error: true,
     });

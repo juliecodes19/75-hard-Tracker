@@ -5,17 +5,17 @@ const { validateObjectId } = require("../utils/validation");
 
 exports.postReading = async (req, res) => {
   try {
-    const data = req.body;
-    if (!data) {
-      return res.status(400).send({
-        res: { data: "Invalid Form Fields!", statusCode: 400 },
-        error: true,
-      });
-    }
-    const reading = await Reading.create(data);
-    return res
-      .status(201)
-      .send({ res: { data: reading, statusCode: 201 }, error: false });
+    const userId = req.user._id;
+    const readingData = {
+      ...req.body,
+      user: userId,
+    };
+
+    const reading = await Reading.create(readingData);
+    return res.status(201).json({
+      res: { data: reading, statusCode: 201 },
+      error: false,
+    });
   } catch (e) {
     return res.status(500).send({
       res: { data: "Internal Server Error!", statusCode: 500 },

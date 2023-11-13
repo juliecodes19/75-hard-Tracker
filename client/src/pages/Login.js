@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import auth from "../utils/auth";
+import { useAuth } from "../utils/auth";
 import apiServiceJWT from "./../services/ApiServiceJWT";
 import { useNavigate } from "react-router-dom";
 
@@ -8,8 +8,9 @@ const initialState = {
   password: "",
 };
 
-const Login = (props) => {
+const Login = () => {
   let navigate = useNavigate();
+  const { login } = useAuth();
   const [state, setState] = useState(initialState);
 
   const handleChange = (e) => {
@@ -26,18 +27,28 @@ const Login = (props) => {
     e.preventDefault();
     const { email, password } = state;
     const user = { email, password };
-    const res = await apiServiceJWT.login(user);
 
-    if (res.error) {
-      alert(`${res.message}`);
-      setState(initialState);
-    } else {
-      const { accessToken } = res;
-      localStorage.setItem("accessToken", accessToken);
-      props.setIsAuthenticated(true);
-      auth.login(() => navigate("/profile"));
+    try {
+      const res = await apiServiceJWT.login(user);
+      if (res.error) {
+        alert(`${res.message}`);
+        setState(initialState);
+        console.error(res.message);
+      } else {
+        // Make sure the server response contains the access token
+        // and that it is not undefined
+        if (res.token) {
+          localStorage.setItem("accessToken", res.token);
+          login(() => navigate("/dashboard"));
+        } else {
+          // If the accessToken is missing or undefined, handle the error
+          console.error("No access token returned from the server");
+        }
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      // Handle errors such as showing a message to the user
     }
-    // REMOVE-END
   };
 
   const validateForm = () => {

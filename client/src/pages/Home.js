@@ -1,27 +1,19 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Register from "./Register";
-import Login from "./Login";
-// import { Link } from "react-router-dom";
-// import Dashboard from "../components/dashboard/Dashboard";
-// import MainLayout from "../layouts/MainLayout";
 
-const Home = (setIsAuthenticated) => {
+import { useNavigate } from "react-router-dom";
+
+const Home = () => {
+  let navigate = useNavigate();
+
+  const handleGetStartedClick = () => {
+    navigate("/register"); // This will navigate to the Register page when the button is clicked
+  };
+
   return (
-    <>
-      <section className="home">
-        <Routes>
-          <Route
-            path="/register"
-            element={<Register setIsAuthenticated={setIsAuthenticated} />}
-          />
-          <Route
-            path="/login"
-            element={<Login setIsAuthenticated={setIsAuthenticated} />}
-          />
-        </Routes>
-      </section>
-    </>
+    <div>
+      <h1>Crush it with the 75 Hard Challenge</h1>
+      <button onClick={handleGetStartedClick}>Get Started</button>
+    </div>
   );
 };
 

@@ -1,0 +1,77 @@
+.diet-summary {
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 500px;
+  margin: 20px auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.diet-summary h2 {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.diet-summary ul {
+  list-style: none;
+  padding: 0;
+}
+
+.diet-summary li {
+  margin-bottom: 8px;
+  padding: 4px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.create-diet-box {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.create-diet-box .form-title {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 24px;
+}
+
+.create-diet-box form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  align-items: end;
+}
+
+.create-diet-box input[type="text"],
+.create-diet-box textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box; /* So the width includes padding */
+}
+
+.create-diet-box textarea {
+  height: 100px; /* Or however tall you want your textarea to be */
+}
+
+.create-diet-box button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: #5cb85c;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-diet-box button[type="submit"]:hover {
+  background-color: #4cae4c;
+}

@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useUser } from "@clerk/clerk-react";
-import { postWorkout } from "../services/formService";
+import React, { useState } from "react";
+
+import { postWorkout } from "../../services/formService";
+import { WorkoutSum } from "./WorkoutSummary";
+import "./workout.css";
 
 export const WorkoutForm = () => {
-  const user = useUser();
-  console.log(user);
-
-  // const history = useHistory();
-  const [formData, setFormData] = useState({
+  // Initialize form data from local state or set to default values
+  const initialState = {
     startTime: "",
     endTime: "",
     session: "",
@@ -16,8 +15,9 @@ export const WorkoutForm = () => {
     sets: "",
     reps: "",
     notes: "",
-  });
+  };
 
+  const [formData, setFormData] = useState(initialState);
   const [submittedData, setSubmittedData] = useState(null);
 
   const handleChange = (event) => {
@@ -27,37 +27,25 @@ export const WorkoutForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // if (!user) {
-    // User is not authenticated, redirect to login
-    //   history.push("/login");
-    //   return;
-    // }
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("No access token available. User might not be logged in.");
+      return;
+    }
+
     try {
-      const {
-        startTime,
-        endTime,
-        session,
-        location,
-        exerciseType,
-        sets,
-        reps,
-        notes,
-      } = formData;
-      const response = await postWorkout(formData, user.id);
-      console.log("Response from API:", response);
-      setSubmittedData(response.data);
-      setFormData({
-        startTime: "",
-        endTime: "",
-        session: "",
-        location: "",
-        exerciseType: "",
-        sets: "",
-        reps: "",
-        notes: "",
-      });
+      const response = await postWorkout(formData, token);
+      console.log("Workout submitted successfully:", response);
+
+      if (response.error) {
+        console.error("Error submitting workout:", response.error);
+      } else {
+        // Directly use the response data to update the submittedData state
+        setSubmittedData(response.res.data);
+        setFormData(initialState); // Reset the form data after successful submission
+      }
     } catch (error) {
-      console.log("Error submitting workout:", error);
+      console.error("Error submitting workout:", error);
     }
   };
 
@@ -128,12 +116,7 @@ export const WorkoutForm = () => {
           <button type="submit">Submit</button>
         </form>
       </div>
-      {submittedData && (
-        <div>
-          <h2>Submitted Data:</h2>
-          <pre>{JSON.stringify(submittedData, null, 2)}</pre>
-        </div>
-      )}
+      {submittedData && <WorkoutSum workoutData={submittedData} />}
     </div>
   );
 };

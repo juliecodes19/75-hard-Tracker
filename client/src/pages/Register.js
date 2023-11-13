@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import auth from "../utils/auth";
+import { useAuth } from "../utils/auth";
 import apiServiceJWT from "./../services/ApiServiceJWT";
 import { useNavigate } from "react-router-dom";
 
 const initialState = {
-  fullName: "",
+  name: "",
   email: "",
   password: "",
 };
 
 const Register = (props) => {
   let navigate = useNavigate();
+  const { register } = useAuth();
   const [state, setState] = useState(initialState);
 
   const handleChange = (e) => {
@@ -25,35 +26,38 @@ const Register = (props) => {
     // Check the client-session to see how to handle redirects
     // REMOVE-START
     e.preventDefault();
-    const { email, password, fullName } = state;
-    const user = { fullName, email, password };
-    const res = await apiServiceJWT.register(user);
+    const { email, password, name } = state;
+    const user = { name, email, password };
 
-    if (res.error) {
-      alert(`${res.message}`);
-      setState(initialState);
-    } else {
-      const { accessToken } = res;
-      localStorage.setItem("accessToken", accessToken);
-      props.setIsAuthenticated(true);
-      auth.login(() => navigate("/profile"));
-    }
-    // REMOVE-END
+    apiServiceJWT
+      .register(state)
+      .then((data) => {
+        // Handle success, maybe navigate to dashboard or login
+        localStorage.setItem("accessToken", data.accessToken);
+
+        register(() => navigate("/dashboard"));
+      })
+      .catch((error) => {
+        // Handle error, set error message to state and display it in the UI
+        console.error("Registration failed:", error);
+        // For example: setError("Registration failed. Please try again.");
+      });
   };
 
   const validateForm = () => {
-    return !state.email || !state.password || !state.fullName;
+    return !state.email || !state.password || !state.name;
   };
 
   return (
     <div>
-      <h2>Register</h2>
+      <h2>Welcome to the Challenge That will change your life</h2>
+      <p></p>
       <form className="form" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Name"
-          name="fullName"
-          value={state.fullName}
+          name="name"
+          value={state.name}
           onChange={handleChange}
         />
         <input

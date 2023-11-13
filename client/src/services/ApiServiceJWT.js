@@ -11,9 +11,21 @@ apiServiceJWT.register = (user) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
   })
-    .then((res) => res.json())
-    .catch((err) => console.log(err));
-  // REMOVE-END
+    .then(async (res) => {
+      const body = await res.json(); // Attempt to parse the response body regardless of the response status
+      if (!res.ok) {
+        // If the server responded with an error status, we throw an error with the parsed body
+        throw new Error(
+          `Error: ${res.status} - ${body.message || "Unknown error"}`
+        );
+      }
+      return body; // If response is OK, return the parsed body
+    })
+    .catch((err) => {
+      // Log or handle errors more appropriately here
+      console.error("Registration error:", err);
+      throw err; // We rethrow the error so we can handle it in the component
+    });
 };
 
 apiServiceJWT.login = (user) => {
